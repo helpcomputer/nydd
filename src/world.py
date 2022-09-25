@@ -22,12 +22,11 @@ class World:
 
         self.add_actor("old_lady", 151*8, 137*8)
 
-        self.map.cam.set_position(
-            self.player.sprite.position[0],
-            self.player.sprite.position[1]
-        )
-
-        #print("Assigned player as {}".format(self.player))
+        cam = self.map.cam
+        pos = self.player.sprite.position
+        x = (pos[0] // cam.rect.w) * cam.rect.w
+        y = (pos[1] // cam.rect.h) * cam.rect.h
+        cam.set_position(x, y)
 
     def add_actor(self, name, x, y):
         defin = actor_defs.defs.get(name)

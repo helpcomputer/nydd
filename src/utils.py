@@ -1,5 +1,6 @@
 
 import csv
+import textwrap
 
 import pyxel as p
 
@@ -40,3 +41,34 @@ def load_csv_tilemap(file, tm_num, posX=0, posY=0):
         res.append(' '.join(data[y]))
 
     p.tilemap(tm_num).set(posX, posY, res)
+
+def text_box_chunks(text, lines_high, wrap_width):
+    """Splits a run of text into "chunks". Each "chunk" contains enough
+    lines to fit into the paramters given, but no more.
+
+    Arguments:
+    text -- run of text.
+    lines_high -- maximum number of lines high each chunk should be.
+    wrapWidth -- maximum number of characters each line can be.
+
+    Returns:
+    List of lists -- chunks[ [line0, line1, ...], [line0, line1, ...] ]
+    """
+    wrappedText = textwrap.fill(text, wrap_width)
+    
+    lines = wrappedText.split('\n')
+    chunks = []
+    
+    count = 0
+    thisChunk = []
+    for i in range(len(lines)):
+        thisChunk.append(lines[i])
+        count += 1
+        if count == lines_high:
+            count = 0
+            chunks.append(thisChunk)
+            thisChunk = []
+    if count > 0:
+        chunks.append(thisChunk)
+   
+    return chunks

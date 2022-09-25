@@ -1,4 +1,6 @@
 
+import pyxel
+
 def overlap(x1, y1, w1, h1, x2, y2, w2, h2):
     return x1 < x2 + w2 and \
             x1 + w1 > x2 and \
@@ -39,3 +41,12 @@ class Rect:
     @property
     def bottom(self):
         return self.y + self.h
+
+    def draw(self, col):
+        pyxel.rect(
+            self.x,
+            self.y,
+            self.w,
+            self.h,
+            col
+        )
