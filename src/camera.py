@@ -12,8 +12,5 @@ class Camera:
         )
 
     def set_position(self, x, y):
-        self.rect.x = (x // self.rect.w) * self.rect.w
-        self.rect.y = (y // self.rect.h) * self.rect.h
-
-        #print("set cam to {},{}".format(self.rect.x, self.rect.y))
-
+        self.rect.x = x
+        self.rect.y = y
