@@ -9,7 +9,7 @@ A dark mini-platform/RPG/adventure game using Pyxel engine.
 - [Python](https://www.python.org/) 3.7 or higher.
 - [Pyxel](https://github.com/kitao/pyxel) 1.8.7 or higher.
 
-# Controls
+## Controls
 - Move: Arrow keys
 - Attack: Z
 - Jump: X
