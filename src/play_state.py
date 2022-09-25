@@ -1,4 +1,6 @@
 
+import pyxel
+
 import state
 import hud
 import world
@@ -48,6 +50,10 @@ class PlayState(state.State):
         }))
 
     def handle_input(self, inputs):
+        if pyxel.btnp(pyxel.KEY_Q):
+            self.stack.pop()
+            return
+
         self.state_machine.handle_input(inputs)
 
     def update(self):
