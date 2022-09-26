@@ -62,7 +62,7 @@ class Actor:
 
             total_moved_abs = 0
             sign = 1 if dx > 0 else -1
-            while (total_moved_abs < abs_dx):
+            while total_moved_abs < abs_dx:
                 d = min(1, abs_dx - total_moved_abs) * sign
                 if self.detect_collision(x + d, y):
                     break
@@ -71,7 +71,7 @@ class Actor:
 
             total_moved_abs = 0
             sign = 1 if dy > 0 else -1
-            while (total_moved_abs < abs_dy):
+            while total_moved_abs < abs_dy:
                 d = min(1, abs_dy - total_moved_abs) * sign
                 if self.detect_collision(x, y + d):
                     break
@@ -80,7 +80,7 @@ class Actor:
         else:
             total_moved_abs = 0
             sign = 1 if dy > 0 else -1
-            while (total_moved_abs < abs_dy):
+            while total_moved_abs < abs_dy:
                 d = min(1, abs_dy - total_moved_abs) * sign
                 if self.detect_collision(x, y + d):
                     break
@@ -89,7 +89,7 @@ class Actor:
 
             total_moved_abs = 0
             sign = 1 if dx > 0 else -1
-            while (total_moved_abs < abs_dx):
+            while total_moved_abs < abs_dx:
                 d = min(1, abs_dx - total_moved_abs) * sign
                 if self.detect_collision(x + d, y):
                     break

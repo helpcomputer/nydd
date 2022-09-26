@@ -19,9 +19,11 @@ class MainMenuState(state.State):
             "stack" : self.stack,
         }))
 
-        text = ("You awaken on the floor with a headache. You are in a "
+        text = (
+            "You awaken on the floor with a headache. You are in a "
             "cold, dank, wet room. You hear strange noises in the distance,"
-            " you must escape this place. You must find a way out...")
+            " you must escape this place. You must find a way out..."
+        )
         self.stack.push(
             text_box.TextBox({
                 "stack" : self.stack,

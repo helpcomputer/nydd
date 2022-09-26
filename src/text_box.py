@@ -82,10 +82,10 @@ class TextBox(state.State):
             )
             line_y += pyxel.FONT_HEIGHT
 
-        caret = "v"
-        if self.chunk_index == len(self.chunks) - 1:
-            caret = "OK"
         if self.show_caret:
+            caret = "v"
+            if self.chunk_index == len(self.chunks) - 1:
+                caret = "OK"
             utils.text_label(
                 self.text_area.right 
                     + self.padding

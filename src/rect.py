@@ -2,10 +2,12 @@
 import pyxel
 
 def overlap(x1, y1, w1, h1, x2, y2, w2, h2):
-    return x1 < x2 + w2 and \
-            x1 + w1 > x2 and \
-            y1 < y2 + h2 and \
-            y1 + h1 > y2
+    return all(
+        x1 < x2 + w2,
+        x1 + w1 > x2,
+        y1 < y2 + h2,
+        y1 + h1 > y2
+    )
 
 class Rect:
     def __init__(self, x, y, w, h):
@@ -15,16 +17,20 @@ class Rect:
         self.h = h
         
     def is_overlapping(self, x, y, w, h):
-        return self.x < x + w and \
-            self.right > x and \
-            self.y < y + h and \
+        return all(
+            self.x < x + w,
+            self.right > x,
+            self.y < y + h,
             self.bottom > y
+        )
         
     def is_overlapping_other(self, other):
-        return self.x < other.right and \
-            self.right > other.x and \
-            self.y < other.bottom and \
+        return all(
+            self.x < other.right,
+            self.right > other.x,
+            self.y < other.bottom,
             self.bottom > other.y
+        )
             
     @property
     def right(self):

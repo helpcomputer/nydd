@@ -61,8 +61,8 @@ def text_box_chunks(text, lines_high, wrap_width):
     
     count = 0
     thisChunk = []
-    for i in range(len(lines)):
-        thisChunk.append(lines[i])
+    for line in lines:
+        thisChunk.append(line)
         count += 1
         if count == lines_high:
             count = 0
