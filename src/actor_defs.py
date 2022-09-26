@@ -1,10 +1,10 @@
 
 import actor
-import player.actor
+import player.player_actor
 
 defs = {
     "player" : {
-        "create" : player.actor.Player,
+        "create" : player.player_actor.Player,
         "states" : {
             "idle" : {
                 "frames" : ((224,240),(240,240)),
