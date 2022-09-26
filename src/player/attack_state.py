@@ -16,14 +16,25 @@ class Attack(state.State):
         pass
 
     def handle_input(self, inputs):
-        pass
+        move_x = 0
+        if inputs.pressing("left"):
+            move_x += -1
+
+        if inputs.pressing("right"):
+            move_x += 1
+
+        self.player.vel_x = move_x * self.player.run_speed
 
     def update(self):
         if self.player.sprite.anim_finished:
-            if self.player.vel_x != 0:
-                self.state_machine.change("run")
+            if self.player.is_falling:
+                self.state_machine.change("fall")
             else:
-                self.state_machine.change("idle")
+                if self.player.vel_x != 0:
+                    self.state_machine.change("run")
+                else:
+                    self.state_machine.change("idle")
+            return
 
     def draw(self):
         pass

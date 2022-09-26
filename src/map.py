@@ -24,8 +24,7 @@ class Map:
         return p.tilemap(self.tilemap).pget(tile_x, tile_y)
 
     def update(self):
-        for a in self.world.actors:
-            a.update()
+        pass
 
     def draw(self):
         p.bltm(
@@ -37,7 +36,3 @@ class Map:
             self.cam.rect.w, 
             self.cam.rect.h
         )
-
-        for a in self.world.actors:
-            a.draw()
-

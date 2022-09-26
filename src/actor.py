@@ -11,12 +11,14 @@ MAX_FALL_SPEED = 2.5
 
 class Actor:
     def __init__(self, world, defin, x, y):
+        self.type = defin["type"]
         self.world = world
         self.sprite = sprite.Sprite(defin, x, y)
         self.hitbox = rect.Rect(*(defin.get("hitbox", (8,8,8,8))))
         self.vel_x = 0
         self.vel_y = 0
         self.is_falling = False
+        self.uid = 0
 
     def get_state(self):
         return self.sprite.state

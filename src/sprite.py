@@ -7,6 +7,7 @@ class Sprite:
     def __init__(self, defin, x, y):
         self.position = [x, y]
         self.anims = defin.get("states", None)
+        self.colour_key = defin.get("colour_key", p.COLOR_BLACK)
         self.state = defin.get("start_state", "idle")
         self.frame = defin.get("start_frame", 0)
         self.frame_time = 0
@@ -64,5 +65,5 @@ class Sprite:
             uv[1],
             -self.size[0] if self.flip_h else self.size[0],
             -self.size[1] if self.flip_v else self.size[1],
-            p.COLOR_BLACK
+            self.colour_key
         )

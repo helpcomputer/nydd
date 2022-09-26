@@ -17,6 +17,7 @@ class Run(state.State):
 
     def handle_input(self, inputs):
         if inputs.tapped("button_attack"):
+            self.player.vel_x = 0
             self.state_machine.change("attack")
             return
 
