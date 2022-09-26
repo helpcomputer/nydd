@@ -18,7 +18,7 @@ A dark mini-platform/RPG/adventure game using Pyxel engine.
 - Exit game: Escape
 
 ## Web play test
-- [Here]("https://helpcomputer.github.io/pyxel/nydd/")
+- [Here](https://helpcomputer.github.io/pyxel/nydd/)
 
 ## Credits
 - Designed by [helpcomputer0](https://twitter.com/helpcomputer0)
