@@ -12,7 +12,7 @@
 #     }
 # }
 
-class Stats():
+class Stats:
     def __init__(self, stats):
         self.base = {}
         self.modifiers = {}
