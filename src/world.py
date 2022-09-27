@@ -77,6 +77,11 @@ class World:
             for a in a_dict.values():
                 a.update()
 
+        for k in list(self.actors.keys()):
+            a = self.actors[k]
+            if not a.is_alive:
+                self.remove_actor(k)
+
     def draw(self):
         self.map.draw()
 

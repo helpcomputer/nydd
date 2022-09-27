@@ -19,6 +19,7 @@ class Actor:
         self.vel_y = 0
         self.is_falling = False
         self.uid = 0
+        self.is_alive = True
 
     def get_state(self):
         return self.sprite.state

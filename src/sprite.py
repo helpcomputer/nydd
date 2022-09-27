@@ -9,6 +9,8 @@ class Sprite:
         self.anims = defin.get("states", None)
         self.colour_key = defin.get("colour_key", p.COLOR_BLACK)
         self.state = defin.get("start_state", "idle")
+        if len(self.anims) == 1:
+            self.state = next(iter(self.anims))
         self.frame = defin.get("start_frame", 0)
         self.frame_time = 0
         self.flip_h = defin.get("flip_h", False)

@@ -69,6 +69,5 @@ defs = {
         "size" : (16,16),
         "hitbox" : (1,0,14,16),
         "colour_key" : 1,
-        "start_state" : "walk"
     },
 }
