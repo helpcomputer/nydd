@@ -6,7 +6,7 @@ import constants
 class Panel:
     def __init__(self, paras=None):
         params = paras or {}
-        self.img_num = params.get("img_num", 0)
+        self.img_num = params.get("img_num", constants.IMAGE_BANK_GUI)
         self.nine_patch_pos = params.get("nine_patch_pos", (44,244))
         self.tile_size = params.get("tile_size", 4)
         self.nine_tiles = []

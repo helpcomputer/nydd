@@ -7,6 +7,7 @@ class Sprite:
     def __init__(self, defin, x, y):
         self.position = [x, y]
         self.anims = defin.get("states", None)
+        self.image_bank = constants.IMAGE_BANK_SPRITES
         self.colour_key = defin.get("colour_key", p.COLOR_BLACK)
         self.state = defin.get("start_state", "idle")
         if len(self.anims) == 1:
@@ -62,7 +63,7 @@ class Sprite:
             p.floor(self.position[1] 
                 - camera.rect.top
                 + constants.HUD_H), 
-            0, 
+            self.image_bank, 
             uv[0],
             uv[1],
             -self.size[0] if self.flip_h else self.size[0],

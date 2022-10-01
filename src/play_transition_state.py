@@ -20,14 +20,16 @@ class PlayTransitionState(state.State):
         if self.tween_event or dir is None:
             return
 
+        self.world.screen_unload()
+
         cam = self.world.map.cam
         player = self.world.player
-
         map_x = cam.rect.x
         map_y = cam.rect.y
         player_x = player.sprite.position[0]
         player_y = player.sprite.position[1]
         pl_hitbox = player.hitbox
+
         if dir == "right":
             map_x = cam.rect.x + cam.rect.w
             player_x = player.sprite.position[0] + pl_hitbox.w + 2
@@ -68,7 +70,7 @@ class PlayTransitionState(state.State):
         )
 
     def exit(self):
-        pass
+        self.world.screen_load()
 
     def handle_input(self, inputs):
         if inputs.tapped("button_start"):

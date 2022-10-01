@@ -42,14 +42,16 @@ class Hud():
 
         # Life
         p.blt(
-            0,0,0,
+            0,0,
+            constants.IMAGE_BANK_GUI,
             0,248,8,8,
             p.COLOR_BLACK
         )
         self.health_bar.draw()
         # Magic
         p.blt(
-            0,8,0,
+            0,8,
+            constants.IMAGE_BANK_GUI,
             8,248,8,8,
             p.COLOR_BLACK
         )
@@ -57,7 +59,7 @@ class Hud():
         # Gold
         p.blt(
             constants.SCREEN_W/2,0,
-            0,
+            constants.IMAGE_BANK_GUI,
             16,248,8,8,
             p.COLOR_BLACK
         )
@@ -71,7 +73,7 @@ class Hud():
         p.blt(
             constants.SCREEN_W/2,
             8,
-            0,
+            constants.IMAGE_BANK_GUI,
             8,240,8,8,
             p.COLOR_BLACK
         )
@@ -84,7 +86,7 @@ class Hud():
         # Weapon
         p.blt(
             constants.SCREEN_W-20,0,
-            0,
+            constants.IMAGE_BANK_GUI,
             24,240,16,16,
             p.COLOR_BLACK
         )

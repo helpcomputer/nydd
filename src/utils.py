@@ -29,7 +29,7 @@ def load_csv_tilemap(file, tm_num, posX=0, posY=0):
         for row in reader:
             line = []
             for item in row:
-                n = int(item)
+                n = max(0, int(item))
                 x = n % tiles_per_image_row
                 y = n // tiles_per_image_row
                 str = format(x,'02x') + format(y,'02x')

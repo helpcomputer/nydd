@@ -9,7 +9,7 @@ SOLID_TILE_Y_MAX = 16
 class Map:
     def __init__(self, params) -> None:
         self.world = params["world"]
-        self.image_bank = params.get("image_bank", 0)
+        self.image_bank = params.get("image_bank", c.IMAGE_BANK_TILES)
         self.tilemap = params["tilemap"]
         self.cam = camera.Camera()
 

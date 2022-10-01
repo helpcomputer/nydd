@@ -6,6 +6,7 @@ import state_stack
 import main_menu_state
 import input
 import utils
+import actor_spawn_tiles
 
 g_debug = False
 
@@ -20,9 +21,8 @@ class App:
             capture_scale=1,
             capture_sec=20
         )
-        pyxel.load("assets/res.pyxres")
-        pyxel.image(0).load(0,0,"assets/img00.png")
-        utils.load_csv_tilemap("assets/map00.csv", 0)
+
+        self._load_resources()
 
         self.input = input.Input()
 
@@ -35,6 +35,29 @@ class App:
         #pyxel.mouse(True)
 
         pyxel.run(self.update, self.draw)
+
+    def _load_resources(self):
+        pyxel.load("assets/res.pyxres")
+        
+        pyxel.image(
+            constants.IMAGE_BANK_TILES
+        ).load(0,0,constants.IMAGE_FILE_TILES)
+        pyxel.image(
+            constants.IMAGE_BANK_SPRITES
+        ).load(0,0,constants.IMAGE_FILE_SPRITES)
+        pyxel.image(
+            constants.IMAGE_BANK_GUI
+        ).load(0,0,constants.IMAGE_FILE_GUI)
+
+        utils.load_csv_tilemap(
+            constants.TILEMAP_FILE_TILES,
+            constants.TILEMAP_WORLD_TILES
+        )
+        utils.load_csv_tilemap(
+            constants.TILEMAP_FILE_SPAWNS,
+            constants.TILEMAP_WORLD_SPAWNS
+        )
+        actor_spawn_tiles.load_spawns(constants.TILEMAP_WORLD_SPAWNS)
 
     def update(self):
         self.input.update()
