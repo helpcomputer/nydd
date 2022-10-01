@@ -23,6 +23,8 @@ def load_spawns(tm_num):
     for ty in range(pyxel.TILEMAP_SIZE):
         for tx in range(pyxel.TILEMAP_SIZE):
             tile = pyxel.tilemap(tm_num).pget(tx, ty)
+            if tile is (0,0):
+                continue
             img_tile_index = tile[0]+tile[1]*c.TILE_IMAGE_TILES_WIDE
             name = INDEX.get(img_tile_index)
             if name:
