@@ -11,6 +11,29 @@ class ActorType(Enum):
     item = 3
     npc = 4
 
+BASE_STATS = {
+    ActorType.player : {
+        "attack" : 1,
+        "defence" : 1,
+        "hp_now" : 100,
+        "hp_max" : 100,
+        "mp_now" : 0,
+        "mp_max" : 100,
+    },
+    ActorType.enemy : {
+        "attack" : 1,
+        "defence" : 1,
+        "hp_now" : 100,
+        "hp_max" : 100,
+    },
+    ActorType.projectile : {
+        "attack" : 1,
+        "timeout" : 1
+    },
+    ActorType.item : {},
+    ActorType.npc : {},
+}
+
 defs = {
     "player" : {
         "create" : player.player_actor.Player,

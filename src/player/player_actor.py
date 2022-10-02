@@ -7,7 +7,6 @@ import actor
 import state_machine
 import utils
 import app
-import stats
 
 import player.idle_state
 import player.run_state
@@ -23,7 +22,6 @@ class Player(actor.Actor):
 
         self.vel_y_tween = None
         self.run_speed = RUN_SPEED
-        self.stats = stats.Stats({})
 
         self.state_machine = state_machine.StateMachine()
         self.state_machine.states["idle"] = \

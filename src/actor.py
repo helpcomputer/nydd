@@ -5,6 +5,8 @@ import constants as c
 import rect
 import sprite
 import app
+import stats
+import actor_defs
 
 GRAVITY = 0.5
 MAX_FALL_SPEED = 2.5
@@ -20,6 +22,9 @@ class Actor:
         self.is_falling = False
         self.uid = 0
         self.is_alive = True
+        self.stats = stats.Stats(
+            actor_defs.BASE_STATS[self.type]
+        )
 
     def get_state(self):
         return self.sprite.state

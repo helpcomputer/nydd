@@ -21,11 +21,8 @@ class World:
             actor_defs.ActorType.projectile : self.projectiles,
         }
 
-        self.hp = constants.START_HP
-        self.mp = constants.START_MP
         self.gold = 0
         self.crystals = 0
-        self.weapon = None
 
         self.map = map.Map({
             "world" : self,

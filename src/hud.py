@@ -7,29 +7,34 @@ import utils
 
 class Hud():
     def __init__(self, theWorld):
+        self.world = theWorld
+        self.player = theWorld.player
         self.health_bar = progress_bar.ProgressBar({
             "x" : 8,
             "y" : 1,
             "max_size" : [52,5],
-            "value" : theWorld.hp,
-            "max_value" : constants.MAX_HP,
+            "value" : 0,
+            "max_value" : 0,
             "bar_col" : 8,
         })
         self.magic_bar = progress_bar.ProgressBar({
             "x" : 8,
             "y" : 9,
             "max_size" : [52,5],
-            "value" : theWorld.mp,
-            "max_value" : constants.MAX_MP,
+            "value" : 0,
+            "max_value" : 0,
             "bar_col" : 3,
         })
         self.gold = 0
         self.crystals = 0
-        self.world = theWorld
+
+        self.update()
 
     def update(self):
-        self.health_bar.value = self.world.hp
-        self.magic_bar.value = self.world.mp
+        self.health_bar.value = self.player.stats.get("hp_now")
+        self.health_bar.max_value = self.player.stats.get("hp_max")
+        self.magic_bar.value = self.player.stats.get("mp_now")
+        self.magic_bar.max_value = self.player.stats.get("mp_max")
         self.gold = self.world.gold
         self.crystals = self.world.crystals
 

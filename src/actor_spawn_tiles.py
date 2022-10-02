@@ -43,4 +43,4 @@ def load_spawns(tm_num):
                     assert(scr_dict.get(tm_tile_index) is None)
                     scr_dict[tm_tile_index] = name
 
-    print(g_spawns)
+    #print(g_spawns)
