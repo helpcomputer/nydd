@@ -1,4 +1,6 @@
 
+import pyxel
+
 import state
 import play_state
 import utils
@@ -10,6 +12,8 @@ class MainMenuState(state.State):
         super().__init__()
 
         self.stack = params["stack"]
+
+        self.degrees = 0
 
     def enter(self):
         pass
@@ -36,22 +40,32 @@ class MainMenuState(state.State):
             self.stack.pop()
 
     def update(self):
-        pass
+        self.degrees += 3
+        if self.degrees >= 360:
+            self.degrees -= 360
 
     def draw(self):
         c = constants
         u = utils
-        welcome_text = "Welcome to Nydd"
-        u.text(
-            c.SCREEN_W/2 - u.get_str_width(welcome_text)/2,
-            c.SCREEN_H/3,
-            welcome_text,
-            8
+        # Title bg
+        pyxel.blt(
+            0,0,
+            c.IMAGE_BANK_GUI,
+            0,0,c.SCREEN_W, c.SCREEN_H
         )
-        start_game = "Press Enter to Start"
-        u.text(
-            c.SCREEN_W/2 - u.get_str_width(start_game)/2,
-            c.SCREEN_H/3 * 2,
-            start_game,
+        # Titles
+        pyxel.blt(
+            33,40 + pyxel.sin(self.degrees)*2,
+            c.IMAGE_BANK_GUI,
+            128,0,62,18,
+            pyxel.COLOR_BLACK
         )
+
+        if self.degrees < 180:
+            start_game = "Press Start"
+            u.text(
+                c.SCREEN_W/2 - u.get_str_width(start_game)/2,
+                88,
+                start_game,
+            )
     
