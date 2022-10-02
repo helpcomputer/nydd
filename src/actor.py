@@ -8,8 +8,11 @@ import app
 import stats
 import actor_defs
 
-GRAVITY = 0.5
-MAX_FALL_SPEED = 2.5
+DEFAULT_GRAVITY = 0.5
+DEFAULT_MAX_FALL_SPEED = 2.5
+
+def empty_callback():
+    pass
 
 class Actor:
     def __init__(self, world, defin, x, y):
@@ -19,12 +22,18 @@ class Actor:
         self.hitbox = rect.Rect(*(defin.get("hitbox", (8,8,8,8))))
         self.vel_x = 0
         self.vel_y = 0
+        self.gravity = DEFAULT_GRAVITY
+        self.max_fall_speed = DEFAULT_MAX_FALL_SPEED
         self.is_falling = False
         self.uid = 0
         self.is_alive = True
         self.stats = stats.Stats(
             actor_defs.BASE_STATS[self.type]
         )
+
+        self.hit_wall_callback = empty_callback
+        self.hit_roof_callback = empty_callback
+        self.hit_floor_callback = empty_callback
 
     def get_state(self):
         return self.sprite.state
@@ -35,22 +44,19 @@ class Actor:
     def move(self):
         last_y = self.sprite.position[1]
 
-        sig = p.sgn(self.vel_x)
-        if sig < 0:
-            self.sprite.flip_h = True
-        elif sig > 0:
-            self.sprite.flip_h = False
-
         self.apply_gravity()
 
         pos = self.sprite.position
-        pos[0], pos[1], self.vel_x, self.vel_y = \
+        pos[0], pos[1] = \
             self.push_back(pos[0], pos[1], self.vel_x, self.vel_y)
 
         self.is_falling = self.sprite.position[1] > last_y
 
     def apply_gravity(self):
-        self.vel_y = min(self.vel_y + GRAVITY, MAX_FALL_SPEED)
+        self.vel_y = min(
+            self.vel_y + self.gravity, 
+            self.max_fall_speed
+        )
 
     def detect_collision(self, x, y):
         x1 = int((x + self.hitbox.left) // 8)
@@ -73,6 +79,7 @@ class Actor:
             while total_moved_abs < abs_dx:
                 d = min(1, abs_dx - total_moved_abs) * sign
                 if self.detect_collision(x + d, y):
+                    self.hit_wall_callback()
                     break
                 x += d
                 total_moved_abs += abs(d)
@@ -82,6 +89,10 @@ class Actor:
             while total_moved_abs < abs_dy:
                 d = min(1, abs_dy - total_moved_abs) * sign
                 if self.detect_collision(x, y + d):
+                    if dy > 0:
+                        self.hit_floor_callback()
+                    else:
+                        self.hit_roof_callback()
                     break
                 y += d
                 total_moved_abs += abs(d)
@@ -91,6 +102,10 @@ class Actor:
             while total_moved_abs < abs_dy:
                 d = min(1, abs_dy - total_moved_abs) * sign
                 if self.detect_collision(x, y + d):
+                    if dy > 0:
+                        self.hit_floor_callback()
+                    else:
+                        self.hit_roof_callback()
                     break
                 y += d
                 total_moved_abs += abs(d)
@@ -100,15 +115,24 @@ class Actor:
             while total_moved_abs < abs_dx:
                 d = min(1, abs_dx - total_moved_abs) * sign
                 if self.detect_collision(x + d, y):
+                    self.hit_wall_callback()
                     break
                 x += d
                 total_moved_abs += abs(d)
 
-        return x, y, dx, dy
+        return x, y
+
+    def set_flip(self):
+        sig = p.sgn(self.vel_x)
+        if sig < 0:
+            self.sprite.flip_h = True
+        elif sig > 0:
+            self.sprite.flip_h = False
 
     def update(self):
         self.move()
         self.sprite.update()
+        self.set_flip()
 
     def draw(self):
         cam = self.world.map.cam

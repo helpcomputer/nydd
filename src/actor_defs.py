@@ -3,6 +3,7 @@ from enum import Enum
 
 import actor
 import player.player_actor
+import enemies.octoman
 
 class ActorType(Enum):
     player = 0
@@ -81,12 +82,12 @@ defs = {
     },
 
     "octoman" : {
-        "create" : actor.Actor,
+        "create" : enemies.octoman.Octoman,
         "type" : ActorType.enemy,
         "states" : {
             "walk" : {
                 "frames" : ((192,224),(208,224)),
-                "frame_spd" : 0.4
+                "frame_spd" : 0.2
             },
         },
         "size" : (16,16),

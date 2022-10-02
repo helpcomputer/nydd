@@ -31,6 +31,14 @@ class Rect:
             self.y < other.bottom,
             self.bottom > other.y
         ))
+
+    @property
+    def mid_x(self):
+        return self.x + self.w/2
+
+    @property
+    def mid_y(self):
+        return self.y + self.h/2
             
     @property
     def right(self):
