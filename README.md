@@ -4,8 +4,8 @@
 A dark mini-platform/RPG/adventure game written in Python and using the Pyxel engine.
 
 <p>
-<img src="images/prev01.gif" width="128">
-<img src="images/prev00.gif" width="128">
+<img src="images/prev01.gif" width="256">
+<img src="images/prev00.gif" width="256">
 </p>
 
 ## Dependencies
