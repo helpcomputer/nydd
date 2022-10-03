@@ -4,7 +4,8 @@ import pyxel as p
 import constants as c
 import camera
 
-SOLID_TILE_Y_MAX = 16
+SOLID_TILE_Y_MAX = 15
+ONE_WAY_TILE_ROW = 15
 
 class Map:
     def __init__(self, params) -> None:
@@ -16,6 +17,10 @@ class Map:
     def is_solid(self, tile_x, tile_y):
         tile = self.get_tile(tile_x, tile_y)
         return tile[1] < SOLID_TILE_Y_MAX
+
+    def is_one_way(self, tile_x, tile_y):
+        tile = self.get_tile(tile_x, tile_y)
+        return tile[1] == ONE_WAY_TILE_ROW
 
     def get_tile(self, tile_x, tile_y):
         """Returns a tuple of (tile_x, tile_y)

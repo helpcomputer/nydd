@@ -58,7 +58,7 @@ class Actor:
             self.max_fall_speed
         )
 
-    def detect_collision(self, x, y):
+    def detect_collision(self, x, y, dy=0):
         x1 = int((x + self.hitbox.left) // 8)
         y1 = int((y + self.hitbox.top) // 8)
         x2 = int((x + self.hitbox.right - 1) // 8)
@@ -66,6 +66,10 @@ class Actor:
         for yi in range(y1, y2 + 1):
             for xi in range(x1, x2 + 1):
                 if self.world.map.is_solid(xi, yi):
+                    return True
+        if dy > 0 and p.floor((y + self.hitbox.bottom) % 8) == 1:
+            for xi in range(x1, x2 + 1):
+                if self.world.map.is_one_way(xi, y2):
                     return True
         return False
 
@@ -86,7 +90,7 @@ class Actor:
         sign = 1 if dy > 0 else -1
         while total_moved_abs < abs_dy:
             d = min(1, abs_dy - total_moved_abs) * sign
-            if self.detect_collision(x, y + d):
+            if self.detect_collision(x, y + d, dy):
                 if dy > 0:
                     self.hit_floor_callback()
                 else:
