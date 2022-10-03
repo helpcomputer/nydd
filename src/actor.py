@@ -69,57 +69,42 @@ class Actor:
                     return True
         return False
 
+    def push_back_x(self, x, y, dx, abs_dx):
+        total_moved_abs = 0
+        sign = 1 if dx > 0 else -1
+        while total_moved_abs < abs_dx:
+            d = min(1, abs_dx - total_moved_abs) * sign
+            if self.detect_collision(x + d, y):
+                self.hit_wall_callback()
+                break
+            x += d
+            total_moved_abs += abs(d)
+        return x
+
+    def push_back_y(self, x, y, dy, abs_dy):
+        total_moved_abs = 0
+        sign = 1 if dy > 0 else -1
+        while total_moved_abs < abs_dy:
+            d = min(1, abs_dy - total_moved_abs) * sign
+            if self.detect_collision(x, y + d):
+                if dy > 0:
+                    self.hit_floor_callback()
+                else:
+                    self.hit_roof_callback()
+                break
+            y += d
+            total_moved_abs += abs(d)
+        return y
+
     def push_back(self, x, y, dx, dy):
         abs_dx = abs(dx)
         abs_dy = abs(dy)
         if abs_dx > abs_dy:
-
-            total_moved_abs = 0
-            sign = 1 if dx > 0 else -1
-            while total_moved_abs < abs_dx:
-                d = min(1, abs_dx - total_moved_abs) * sign
-                if self.detect_collision(x + d, y):
-                    self.hit_wall_callback()
-                    break
-                x += d
-                total_moved_abs += abs(d)
-
-            total_moved_abs = 0
-            sign = 1 if dy > 0 else -1
-            while total_moved_abs < abs_dy:
-                d = min(1, abs_dy - total_moved_abs) * sign
-                if self.detect_collision(x, y + d):
-                    if dy > 0:
-                        self.hit_floor_callback()
-                    else:
-                        self.hit_roof_callback()
-                    break
-                y += d
-                total_moved_abs += abs(d)
+            x = self.push_back_x(x, y, dx, abs_dx)
+            y = self.push_back_y(x, y, dy, abs_dy)
         else:
-            total_moved_abs = 0
-            sign = 1 if dy > 0 else -1
-            while total_moved_abs < abs_dy:
-                d = min(1, abs_dy - total_moved_abs) * sign
-                if self.detect_collision(x, y + d):
-                    if dy > 0:
-                        self.hit_floor_callback()
-                    else:
-                        self.hit_roof_callback()
-                    break
-                y += d
-                total_moved_abs += abs(d)
-
-            total_moved_abs = 0
-            sign = 1 if dx > 0 else -1
-            while total_moved_abs < abs_dx:
-                d = min(1, abs_dx - total_moved_abs) * sign
-                if self.detect_collision(x + d, y):
-                    self.hit_wall_callback()
-                    break
-                x += d
-                total_moved_abs += abs(d)
-
+            y = self.push_back_y(x, y, dy, abs_dy)
+            x = self.push_back_x(x, y, dx, abs_dx)
         return x, y
 
     def set_flip(self):
