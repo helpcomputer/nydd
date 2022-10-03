@@ -43,8 +43,23 @@ class Walk(state.State):
     def handle_input(self, inputs):
         pass
 
+    def turn_around_at_ledge(self):
+        tile_x = self.enemy_self.sprite.position[0]
+        if self.enemy_self.vel_x > 0:
+            tile_x += self.enemy_self.hitbox.right + 1
+        else:
+            tile_x += self.enemy_self.hitbox.left + 1
+        tile_x //= 8
+        tile_y = (self.enemy_self.sprite.position[1] \
+            + self.enemy_self.hitbox.bottom + 1) \
+            // 8
+
+        if not self.world.map.is_solid(tile_x, tile_y):
+            self.enemy_self.vel_x *= -1
+            self.enemy_self.set_flip()
+
     def update(self):
-        pass
+        self.turn_around_at_ledge()
 
     def draw(self):
         pass
