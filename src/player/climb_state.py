@@ -4,7 +4,7 @@ import pyxel
 import state
 import actor
 
-CLIMB_SPEED = 0.5
+CLIMB_SPEED = 0.6
 
 class Climb(state.State):
     def __init__(self, player, state_machine, world) -> None:
