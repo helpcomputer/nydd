@@ -32,6 +32,12 @@ class Jump(state.State):
         if inputs.tapped("button_attack"):
             self.state_machine.change("attack")
             return
+
+        if inputs.pressing("up") or inputs.pressing("down"):
+            tile = self.player.get_touching_climbable()
+            if tile is not None:
+                self.state_machine.change("climb")
+            return
         
         move_x = 0
         if inputs.pressing("left"):

@@ -19,6 +19,7 @@ class Sprite:
         self.size = defin.get("size", (8,8))
         self.visible = defin.get("visible", True)
         self.anim_finished = False
+        self.anim_paused = False
 
     def set_state(self, state):
         if state not in self.anims:
@@ -36,6 +37,8 @@ class Sprite:
         return self.anims[self.state]["frames"][self.frame]
 
     def animate(self):
+        if self.anim_paused:
+            return
         if self.anims:
             self.frame_time += constants.SECS_PER_FRAME
             if self.frame_time >= self.anims[self.state]["frame_spd"]:

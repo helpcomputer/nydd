@@ -6,6 +6,11 @@ import camera
 
 SOLID_TILE_Y_MAX = 15
 ONE_WAY_TILE_ROW = 15
+CLIMBABLES = [
+    (248//8,248//8),
+    (248//8,240//8),
+    (248//8,232//8),
+]
 
 class Map:
     def __init__(self, params) -> None:
@@ -13,6 +18,10 @@ class Map:
         self.image_bank = params.get("image_bank", c.IMAGE_BANK_TILES)
         self.tilemap = params["tilemap"]
         self.cam = camera.Camera()
+
+    def is_climbable(self, tile_x, tile_y):
+        tile = self.get_tile(tile_x, tile_y)
+        return tile in CLIMBABLES
 
     def is_solid(self, tile_x, tile_y):
         tile = self.get_tile(tile_x, tile_y)

@@ -13,6 +13,7 @@ import player.run_state
 import player.attack_state
 import player.jump_state
 import player.fall_state
+import player.climb_state
 
 RUN_SPEED = 1.05
 
@@ -34,10 +35,24 @@ class Player(actor.Actor):
             player.jump_state.Jump(self, self.state_machine, world)
         self.state_machine.states["fall"] = \
             player.fall_state.Fall(self, self.state_machine, world)
-        #self.state_machine.states["ladder"] = \
-        #    Ladder(self, self.state_machine, world)
+        self.state_machine.states["climb"] = \
+            player.climb_state.Climb(self, self.state_machine, world)
 
         self.state_machine.change("idle")
+
+    def get_touching_climbable(self):
+        "Return tile location tuple."
+        x = self.sprite.position[0]
+        y = self.sprite.position[1]
+        x1 = int((x + self.hitbox.left) // 8)
+        y1 = int((y + self.hitbox.top) // 8)
+        x2 = int((x + self.hitbox.right - 1) // 8)
+        y2 = int((y + self.hitbox.bottom - 1) // 8)
+        for yi in range(y1, y2 + 1):
+            for xi in range(x1, x2 + 1):
+                if self.world.map.is_climbable(xi, yi):
+                    return (xi, yi)
+        return None
 
     def handle_input(self, inputs):
         self.state_machine.handle_input(inputs)

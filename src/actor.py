@@ -35,6 +35,9 @@ class Actor:
         self.hit_roof_callback = empty_callback
         self.hit_floor_callback = empty_callback
 
+        self.apply_gravity_func = None
+        self.set_flip_func = None
+
     def get_state(self):
         return self.sprite.state
 
@@ -53,10 +56,13 @@ class Actor:
         self.is_falling = self.sprite.position[1] > last_y
 
     def apply_gravity(self):
-        self.vel_y = min(
-            self.vel_y + self.gravity, 
-            self.max_fall_speed
-        )
+        if self.apply_gravity_func:
+            self.apply_gravity_func()
+        else:
+            self.vel_y = min(
+                self.vel_y + self.gravity, 
+                self.max_fall_speed
+            )
 
     def detect_collision(self, x, y, dy=0):
         x1 = int((x + self.hitbox.left) // 8)
@@ -112,11 +118,14 @@ class Actor:
         return x, y
 
     def set_flip(self):
-        sig = p.sgn(self.vel_x)
-        if sig < 0:
-            self.sprite.flip_h = True
-        elif sig > 0:
-            self.sprite.flip_h = False
+        if self.set_flip_func:
+            self.set_flip_func()
+        else:
+            sig = p.sgn(self.vel_x)
+            if sig < 0:
+                self.sprite.flip_h = True
+            elif sig > 0:
+                self.sprite.flip_h = False
 
     def update(self):
         self.move()

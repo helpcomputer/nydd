@@ -62,6 +62,10 @@ defs = {
                 "frames" : ((240,176),),
                 "frame_spd" : 0.15,
                 "loop" : False
+            },
+            "climb" : {
+                "frames" : ((240,160),),
+                "frame_spd" : 0.15,
             }
         },
         "size" : (16,16),
