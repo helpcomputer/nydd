@@ -2,6 +2,7 @@
 
 import actor
 import state_machine
+import enemies.got_hit_state
 
 class Enemy(actor.Actor):
     def __init__(self, world, defin, x, y):
@@ -17,7 +18,30 @@ class Enemy(actor.Actor):
         else:
             self.sprite.flip_h = True
 
+        self.update_func = self.default_update
+        self.draw_func = self.default_draw
+
+        self.got_hit = self.on_got_hit
+
         self.state_machine = state_machine.StateMachine()
+        self.state_machine.states["got_hit"] = \
+            enemies.got_hit_state.GotHit(self, self.state_machine, world)
+
+    def on_got_hit(self, params):
+        if self.state_machine.current.name != "got_hit":
+            # TODO: check for damage and death here.
+
+            change_params = { 
+                "return_state" : self.state_machine.current.name
+            }
+            hitbox = params["hitbox"]
+            if (hitbox.mid_x < 
+                self.sprite.position[0] + self.hitbox.mid_x):
+                change_params["hit_from"] = "left"
+            else:
+                change_params["hit_from"] = "right"
+
+            self.state_machine.change("got_hit", change_params)
 
     def keep_on_screen(self):
         """Keep full sprite on screen, not just checking the hitbox."""
@@ -50,10 +74,18 @@ class Enemy(actor.Actor):
     def hit_wall_response(self):
         self.vel_x *= -1
 
-    def update(self):
+    def default_update(self):
         super().update()
         self.keep_on_screen()
         self.set_flip()
+        self.state_machine.update()
+
+    def default_draw(self):
+        super().draw()
+        self.state_machine.draw()
+
+    def update(self):
+        self.update_func()
 
     def draw(self):
-        super().draw()
+        self.draw_func()

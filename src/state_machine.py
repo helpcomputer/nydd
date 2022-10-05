@@ -4,17 +4,18 @@ class StateMachine():
         self.states = states or {}
         self.current = None
         
-    def change(self, stateName, enter_params=None):
-        assert self.states[stateName]
+    def change(self, state_name, enter_params=None):
+        assert self.states[state_name]
         
-        #print ("changing to state : " + stateName)
+        #print (f"Changing to state {state_name}")
+        #print(f"Enter params are {enter_params}")
         
         #for k,v in self.states.items():
         #    print(k, v)
 
         if self.current:
             self.current.exit()
-        self.current = self.states[stateName]
+        self.current = self.states[state_name]
         self.current.enter(enter_params)
 
     def handle_input(self, inputs):

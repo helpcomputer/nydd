@@ -91,6 +91,11 @@ class World:
         else:
             del self.actor_collections[theActor.type][theActor.uid]
 
+    def player_attacked(self, params):
+        for a in self.actors.values():
+            if a.type != actor_defs.ActorType.player:
+                a.check_hit(params)
+
     def update(self):
         self.map.update()
 

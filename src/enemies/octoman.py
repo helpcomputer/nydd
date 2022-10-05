@@ -1,9 +1,12 @@
 
+import pyxel
 
+import constants
 import state
 import enemies.enemy_actor
 
 DEFAULT_WALK_SPEED = 0.4
+TURN_AROUND_FRAME_LIMIT = constants.FPS
 
 class Octoman(enemies.enemy_actor.Enemy):
     def __init__(self, world, defin, x, y):
@@ -31,6 +34,8 @@ class Walk(state.State):
         self.world = world
         self.enemy_self = enemy_self
 
+        self.last_turn_frame = 0
+
     def enter(self, enter_params=None):
         self.enemy_self.sprite.set_state("walk")
         self.enemy_self.vel_x = DEFAULT_WALK_SPEED
@@ -44,6 +49,14 @@ class Walk(state.State):
         pass
 
     def turn_around_at_ledge(self):
+        """Turns around at any gap found of an 8x tile."""
+
+        # If we are turning around too quickly we might be stuck on a small
+        # ledge, so just walk off the ledge.
+        if (pyxel.frame_count - self.last_turn_frame < 
+            TURN_AROUND_FRAME_LIMIT):
+            return
+
         tile_x = self.enemy_self.sprite.position[0]
         if self.enemy_self.vel_x > 0:
             tile_x += self.enemy_self.hitbox.right + 1
@@ -57,6 +70,7 @@ class Walk(state.State):
         if not self.world.map.is_solid(tile_x, tile_y):
             self.enemy_self.vel_x *= -1
             self.enemy_self.set_flip()
+            self.last_turn_frame = pyxel.frame_count
 
     def update(self):
         self.turn_around_at_ledge()

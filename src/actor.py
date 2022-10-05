@@ -38,6 +38,19 @@ class Actor:
         self.apply_gravity_func = None
         self.set_flip_func = None
 
+        self.got_hit = None
+
+    def check_hit(self, params):
+        if self.got_hit is None:
+            return
+        hitbox = params["hitbox"]
+        dmg = params["damage"]
+        x = self.sprite.position[0] + self.hitbox.left
+        y = self.sprite.position[1] + self.hitbox.top
+        selfbox = rect.Rect(x, y, self.hitbox.w, self.hitbox.h)
+        if selfbox.is_overlapping_other(hitbox):
+            self.got_hit(params)
+
     def get_state(self):
         return self.sprite.state
 
