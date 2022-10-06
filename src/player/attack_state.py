@@ -4,6 +4,7 @@ import pyxel
 import constants
 import state
 import rect
+import app
 
 # TODO: Hitbox size to change based on weapon equipped.
 HITBOX_SIZE = 8
@@ -54,33 +55,34 @@ class Attack(state.State):
 
         if self.player.sprite.frame == 1:
             rect = self.get_hit_rect()
+            attacker_cen_x = (self.player.sprite.position[0] 
+                + self.player.hitbox.mid_x)
             params = {
+                "attacker_cen_x" : attacker_cen_x,
                 "hitbox" : rect,
                 "damage" : 1
             }
             self.world.player_attacked(params)
 
     def draw(self):
-        p = pyxel
-
         if self.player.sprite.frame == 1:
-
             cam = self.world.map.cam
             x = self.player.sprite.position[0] - cam.rect.left
             y = (self.player.sprite.position[1] 
                 - cam.rect.top 
                 + constants.HUD_H)
 
-            if self.player.sprite.flip_h:
-                x -= 8
-            else:
-                x += 16
+            if app.g_debug:
+                if self.player.sprite.flip_h:
+                    x -= 8
+                else:
+                    x += 16
 
-            p.rect(
-                x,
-                y,
-                8,
-                8,
-                8
-            )
+                pyxel.rect(
+                    x,
+                    y,
+                    8,
+                    8,
+                    8
+                )
     
