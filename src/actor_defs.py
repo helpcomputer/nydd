@@ -4,6 +4,7 @@ from enum import Enum
 import actor
 import player.player_actor
 import enemies.octoman
+import explosion
 
 class ActorType(Enum):
     player = 0
@@ -11,6 +12,7 @@ class ActorType(Enum):
     projectile = 2
     item = 3
     npc = 4
+    explosion = 5
 
 BASE_STATS = {
     ActorType.player : {
@@ -31,8 +33,6 @@ BASE_STATS = {
         "attack" : 1,
         "timeout" : 1
     },
-    ActorType.item : {},
-    ActorType.npc : {},
 }
 
 defs = {
@@ -97,5 +97,20 @@ defs = {
         "size" : (16,16),
         "hitbox" : (1,0,14,16),
         "colour_key" : 1,
+    },
+
+    "explosion16" : {
+        "create" : explosion.Explosion,
+        "type" : ActorType.explosion,
+        "states" : {
+            "explode" : {
+                "frames" : (
+                    (0,240),(16,240),(32,240),(48,240),(64,240),(80,240)
+                ),
+                "frame_spd" : 0.06,
+                "loop" : False
+            },
+        },
+        "size" : (16,16),
     },
 }

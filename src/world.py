@@ -12,11 +12,13 @@ class World:
         self.projectiles = {}
         self.items = {}
         self.npcs = {}
+        self.explosions = {}
         self.next_actor_uid = 0
         # Also in draw order, bottom to top.
         self.actor_collections = {
             actor_defs.ActorType.item : self.items,
             actor_defs.ActorType.npc : self.npcs,
+            actor_defs.ActorType.explosion : self.explosions,
             actor_defs.ActorType.enemy : self.enemies,
             actor_defs.ActorType.projectile : self.projectiles,
         }
@@ -105,10 +107,16 @@ class World:
             for a in a_dict.values():
                 a.update()
 
+        on_remove_callbacks = []
         for k in list(self.actors.keys()):
             a = self.actors[k]
             if not a.is_alive:
+                if a.on_remove:
+                    on_remove_callbacks.append(a.on_remove)
                 self.remove_actor(k)
+
+        for f in on_remove_callbacks:
+            f()
 
     def draw(self):
         self.map.draw()
