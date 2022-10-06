@@ -28,8 +28,9 @@ class Actor:
         self.uid = 0
         self.is_alive = True
         self.stats = stats.Stats(
-            actor_defs.BASE_STATS[self.type]
+            actor_defs.BASE_STATS.get(self.type, {})
         )
+        self.children = []
 
         self.hit_wall_callback = empty_callback
         self.hit_roof_callback = empty_callback
@@ -39,6 +40,8 @@ class Actor:
         self.set_flip_func = None
 
         self.got_hit = None
+
+        self.on_remove = None
 
     def check_hit(self, params):
         if self.got_hit is None:
@@ -145,9 +148,15 @@ class Actor:
         self.sprite.update()
         self.set_flip()
 
+        for child in self.children:
+            child.update()
+
     def draw(self):
         cam = self.world.map.cam
         self.sprite.draw(cam)
+
+        for child in self.children:
+            child.draw()
 
         if app.g_debug:
             p.rectb(

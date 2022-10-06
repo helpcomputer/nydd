@@ -1,5 +1,4 @@
 
-from asyncio import constants
 import pyxel
 
 import state

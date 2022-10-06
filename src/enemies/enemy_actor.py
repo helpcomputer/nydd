@@ -1,8 +1,13 @@
 
+import pyxel
 
+import constants
 import actor
 import state_machine
 import enemies.got_hit_state
+import actor_progress_bar
+
+SHOW_HP_BAR_FRAMES = constants.FPS * 3
 
 class Enemy(actor.Actor):
     def __init__(self, world, defin, x, y):
@@ -27,15 +32,52 @@ class Enemy(actor.Actor):
         self.state_machine.states["got_hit"] = \
             enemies.got_hit_state.GotHit(self, self.state_machine, world)
 
+        self.hp_bar = actor_progress_bar.ActorProgressBar({
+            "parent" : self,
+            "world" : self.world,
+            "max_size": (self.sprite.size[0], 2),
+            "max_value" : self.stats.get("hp_max"),
+            "update_func" : self._update_hp_bar
+        })
+        self._update_hp_bar(self.hp_bar)
+        self.children.append(self.hp_bar)
+
+        def on_remove():
+            self.world.add_actor(
+                "explosion16", 
+                self.sprite.position[0], 
+                self.sprite.position[1]
+            )
+        self.on_remove = on_remove
+
+    def _update_hp_bar(self, hp_bar):
+        hp_bar.value = self.stats.get("hp_now")
+        percent = self.stats.get("hp_now")/self.stats.get("hp_max")
+        if percent < 0.33:
+            hp_bar.bar_col = pyxel.COLOR_RED
+        elif percent < 0.66:
+            hp_bar.bar_col = pyxel.COLOR_ORANGE
+        else:
+            hp_bar.bar_col = pyxel.COLOR_GREEN
+
     def on_got_hit(self, params):
         if self.state_machine.current.name != "got_hit":
             # TODO: check for damage and death here.
+            self.stats.set(
+                "hp_now", 
+                max(0, self.stats.get("hp_now") - 20)
+            )
+
+            if self.stats.get("hp_now") == 0:
+                self.is_alive = False
+                return
+
+            self.hp_bar.visible_time = SHOW_HP_BAR_FRAMES
 
             change_params = { 
                 "return_state" : self.state_machine.current.name
             }
-            hitbox = params["hitbox"]
-            if (hitbox.mid_x < 
+            if (params["attacker_cen_x"] < 
                 self.sprite.position[0] + self.hitbox.mid_x):
                 change_params["hit_from"] = "left"
             else:
