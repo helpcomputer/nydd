@@ -18,9 +18,9 @@ class World:
         self.actor_collections = {
             actor_defs.ActorType.item : self.items,
             actor_defs.ActorType.npc : self.npcs,
-            actor_defs.ActorType.explosion : self.explosions,
             actor_defs.ActorType.enemy : self.enemies,
             actor_defs.ActorType.projectile : self.projectiles,
+            actor_defs.ActorType.explosion : self.explosions,
         }
 
         self.gold = 0
@@ -92,6 +92,9 @@ class World:
             self.player = None
         else:
             del self.actor_collections[theActor.type][theActor.uid]
+
+    def is_player_alive(self):
+        return not self.player.is_dead()
 
     def attack_player(self, params):
         self.player.check_for_hit(params)

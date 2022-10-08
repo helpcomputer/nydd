@@ -15,6 +15,7 @@ import player.jump_state
 import player.fall_state
 import player.climb_state
 import player.got_hit_state
+import player.dead_state
 
 RUN_SPEED = 1.05
 INVINCIBILITY_SECS = 2
@@ -42,6 +43,8 @@ class Player(actor.Actor):
             player.climb_state.Climb(self, self.state_machine, world)
         self.state_machine.states["got_hit"] = \
             player.got_hit_state.GotHit(self, self.state_machine, world)
+        self.state_machine.states["dead"] = \
+            player.dead_state.Dead(self, self.state_machine, world)
 
         self.state_machine.change("idle")
 
@@ -50,7 +53,7 @@ class Player(actor.Actor):
             "hp_now", 
             max(0, self.stats.get("hp_now") - amount)
         )
-        print(f"Player took hit, HP now {self.stats.get('hp_now')}")
+        #print(f"Player took hit, HP now {self.stats.get('hp_now')}")
 
     def take_hit(self, params):
         #attacker = params["actor"]
@@ -58,7 +61,7 @@ class Player(actor.Actor):
         attack_box = params["hitbox"]
         selfbox = self.get_hitbox()
         # TODO: check attack against defence for damage amount.
-        self.take_damage(1)
+        self.take_damage(100)
         if self.stats.get("hp_now") > 0:
             self.invincibility_secs = INVINCIBILITY_SECS
             got_hit_params = {"hit_from" : "right"}
@@ -66,11 +69,15 @@ class Player(actor.Actor):
                 got_hit_params["hit_from"] = "left"
             self.state_machine.change("got_hit", got_hit_params)
         else:
-            # TODO game over/dead here.
-            pass
+            self.state_machine.change("dead")
+            return
+
+    def is_dead(self):
+        return self.state_machine.current.name == "dead"
 
     def check_for_hit(self, params):
-        if self.invincibility_secs > 0:
+        if (self.invincibility_secs > 0 
+            or self.is_dead()):
             return
         attack_box = params["hitbox"]
         selfbox = self.get_hitbox()
@@ -106,15 +113,17 @@ class Player(actor.Actor):
                 self.sprite.visible = True
 
     def update(self):
-        super().update()
+        if not self.is_dead():
+            super().update()
+            
+            self.update_invincibility()
+
+            if self.vel_y_tween:
+                self.vel_y_tween.update()
+                if self.vel_y_tween.is_finished():
+                    self.vel_y_tween = None
+
         self.state_machine.update()
-
-        self.update_invincibility()
-
-        if self.vel_y_tween:
-            self.vel_y_tween.update()
-            if self.vel_y_tween.is_finished():
-                self.vel_y_tween = None
 
     def draw(self):
         super().draw()

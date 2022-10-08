@@ -9,6 +9,7 @@ import state_machine
 import play_move_state
 import play_transition_state
 import play_paused_state
+import play_player_dead_state
 
 class PlayState(state.State):
     def __init__(self, params) -> None:
@@ -36,6 +37,10 @@ class PlayState(state.State):
             )
         self.state_machine.states["play_paused"] = \
                 play_paused_state.PlayPausedState(
+                    self.state_machine, params
+            )
+        self.state_machine.states["play_player_dead"] = \
+                play_player_dead_state.PlayPlayerDeadState(
                     self.state_machine, params
             )
 

@@ -72,6 +72,11 @@ defs = {
                 "frame_spd" : 0.15,
                 "loop" : False
             },
+            "dead" : {
+                "frames" : ((240,176),),
+                "frame_spd" : 0.15,
+                "loop" : False
+            },
         },
         "size" : (16,16),
         "hitbox" : (4,2,8,14)
@@ -122,5 +127,20 @@ defs = {
             },
         },
         "size" : (16,16),
+    },
+
+    "explosion_up_16x32" : {
+        "create" : explosion.Explosion,
+        "type" : ActorType.explosion,
+        "states" : {
+            "explode" : {
+                "frames" : (
+                    (96,224),(112,224),(128,224),(144,224),(160,224),(176,224)
+                ),
+                "frame_spd" : 0.1,
+                "loop" : False
+            },
+        },
+        "size" : (16,32),
     },
 }

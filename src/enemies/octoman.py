@@ -76,6 +76,8 @@ class Walk(state.State):
             self.last_turn_frame = pyxel.frame_count
 
     def check_to_attack(self):
+        if not self.world.is_player_alive():
+            return False
         player = self.world.player
         check_area = rect.Rect(0,0,48,8)
         check_area.x = self.enemy_self.sprite.position[0] + 16

@@ -24,6 +24,10 @@ class PlayMoveState(state.State):
         self.world.player.handle_input(inputs)
 
     def update(self):
+        if self.world.player.is_dead():
+            self.state_machine.change("play_player_dead")
+            return
+
         self.world.update()
         self.hud.update()
 

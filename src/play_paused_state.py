@@ -1,7 +1,7 @@
 
 import state
-import constants as c
-import utils as u
+import constants
+import utils
 
 class PlayPausedState(state.State):
     def __init__(self, state_machine, params) -> None:
@@ -28,9 +28,9 @@ class PlayPausedState(state.State):
         pass
 
     def draw(self):
-        str = "Paused"
-        u.text_label(
-            c.SCREEN_W/2 - u.get_str_width(str)/2,
-            c.SCREEN_H/2,
-            str
+        pstr = "Paused"
+        utils.text_label(
+            constants.SCREEN_W/2 - utils.get_str_width(pstr)/2,
+            constants.SCREEN_H/2,
+            pstr
         )
