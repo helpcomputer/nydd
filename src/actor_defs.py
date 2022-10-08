@@ -66,7 +66,12 @@ defs = {
             "climb" : {
                 "frames" : ((240,160),),
                 "frame_spd" : 0.15,
-            }
+            },
+            "got_hit" : {
+                "frames" : ((240,176),),
+                "frame_spd" : 0.15,
+                "loop" : False
+            },
         },
         "size" : (16,16),
         "hitbox" : (4,2,8,14)

@@ -59,6 +59,9 @@ class Sprite:
         self.animate()
 
     def draw(self, camera=None):
+        if not self.visible:
+            return
+
         uv = self.get_frame_uv()
         p.blt(
             p.floor(self.position[0] 

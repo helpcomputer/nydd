@@ -93,6 +93,9 @@ class World:
         else:
             del self.actor_collections[theActor.type][theActor.uid]
 
+    def attack_player(self, params):
+        self.player.check_for_hit(params)
+
     def player_attacked(self, params):
         for a in self.actors.values():
             if a.type != actor_defs.ActorType.player:

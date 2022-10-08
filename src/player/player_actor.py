@@ -1,8 +1,8 @@
 
 
-import pyxel as p
+import pyxel
 
-import constants as c
+import constants
 import actor
 import state_machine
 import utils
@@ -14,8 +14,10 @@ import player.attack_state
 import player.jump_state
 import player.fall_state
 import player.climb_state
+import player.got_hit_state
 
 RUN_SPEED = 1.05
+INVINCIBILITY_SECS = 2
 
 class Player(actor.Actor):
     def __init__(self, world, defin, x, y):
@@ -23,6 +25,7 @@ class Player(actor.Actor):
 
         self.vel_y_tween = None
         self.run_speed = RUN_SPEED
+        self.invincibility_secs = 0
 
         self.state_machine = state_machine.StateMachine()
         self.state_machine.states["idle"] = \
@@ -37,6 +40,8 @@ class Player(actor.Actor):
             player.fall_state.Fall(self, self.state_machine, world)
         self.state_machine.states["climb"] = \
             player.climb_state.Climb(self, self.state_machine, world)
+        self.state_machine.states["got_hit"] = \
+            player.got_hit_state.GotHit(self, self.state_machine, world)
 
         self.state_machine.change("idle")
 
@@ -45,15 +50,33 @@ class Player(actor.Actor):
             "hp_now", 
             max(0, self.stats.get("hp_now") - amount)
         )
+        print(f"Player took hit, HP now {self.stats.get('hp_now')}")
+
+    def take_hit(self, params):
+        #attacker = params["actor"]
+        #attack_stat = params["attack_stat"]
+        attack_box = params["hitbox"]
+        selfbox = self.get_hitbox()
+        # TODO: check attack against defence for damage amount.
+        self.take_damage(1)
+        if self.stats.get("hp_now") > 0:
+            self.invincibility_secs = INVINCIBILITY_SECS
+            got_hit_params = {"hit_from" : "right"}
+            if selfbox.mid_x > attack_box.mid_x:
+                got_hit_params["hit_from"] = "left"
+            self.state_machine.change("got_hit", got_hit_params)
+        else:
+            # TODO game over/dead here.
+            pass
 
     def check_for_hit(self, params):
+        if self.invincibility_secs > 0:
+            return
         attack_box = params["hitbox"]
         selfbox = self.get_hitbox()
         if selfbox.is_overlapping_other(attack_box):
-            attack = params["attack"]
-            # TODO: check attack against defence for damage amount.
-            self.take_damage(20)
-
+            self.take_hit(params)
+            
     def get_touching_climbable(self):
         "Return tile location tuple."
         x = self.sprite.position[0]
@@ -71,9 +94,22 @@ class Player(actor.Actor):
     def handle_input(self, inputs):
         self.state_machine.handle_input(inputs)
 
+    def update_invincibility(self):
+        if self.invincibility_secs > 0:
+            if pyxel.frame_count % 5 == 0:
+                self.sprite.visible = not self.sprite.visible
+
+            self.invincibility_secs = (
+                max(0, self.invincibility_secs - constants.SECS_PER_FRAME)
+            )
+            if self.invincibility_secs == 0:
+                self.sprite.visible = True
+
     def update(self):
         super().update()
         self.state_machine.update()
+
+        self.update_invincibility()
 
         if self.vel_y_tween:
             self.vel_y_tween.update()
@@ -93,10 +129,6 @@ class Player(actor.Actor):
 
             utils.text_label(
                 0,
-                c.HUD_H + p.FONT_HEIGHT,
+                constants.HUD_H + pyxel.FONT_HEIGHT,
                 "{}".format(self.sprite.position)
             )
-
-        #print(self.state_machine.current.name)
-
-

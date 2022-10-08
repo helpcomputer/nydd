@@ -76,16 +76,16 @@ class Enemy(actor.Actor):
 
             self.hp_bar.visible_time = SHOW_HP_BAR_FRAMES
 
-            change_params = { 
+            got_hit_params = { 
                 "return_state" : self.state_machine.current.name
             }
             if (params["attacker_cen_x"] < 
                 self.sprite.position[0] + self.hitbox.mid_x):
-                change_params["hit_from"] = "left"
+                got_hit_params["hit_from"] = "left"
             else:
-                change_params["hit_from"] = "right"
+                got_hit_params["hit_from"] = "right"
 
-            self.state_machine.change("got_hit", change_params)
+            self.state_machine.change("got_hit", got_hit_params)
 
     def keep_on_screen(self):
         """Keep full sprite on screen, not just checking the hitbox."""

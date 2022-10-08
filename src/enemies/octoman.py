@@ -146,9 +146,9 @@ class Attack(state.State):
                 params = {
                     "actor" : self.enemy_self,
                     "hitbox" : self.get_attack_box(),
-                    "attack" : self.enemy_self.stats.get("attack")
+                    "attack_stat" : self.enemy_self.stats.get("attack")
                 }
-                self.world.player.check_for_hit(params)
+                self.world.attack_player(params)
 
             else:
                 self.started_attack_move = True

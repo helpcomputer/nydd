@@ -28,11 +28,12 @@ class GotHit(state.State):
         self.enemy_self.set_flip_func = actor.empty_callback
         self.enemy_self.sprite.anim_paused = True
 
-        if params["hit_from"] == "left":
-            self.enemy_self.vel_x = PUSH_BACK_SPEED
-        else:
+        self.enemy_self.vel_x = PUSH_BACK_SPEED
+        self.enemy_self.sprite.flip_h = True
+        if params["hit_from"] == "right":
             self.enemy_self.vel_x = -PUSH_BACK_SPEED
-
+            self.enemy_self.sprite.flip_h = False
+            
     def exit(self):
         self.enemy_self.draw_func = self.enemy_self.default_draw
         self.enemy_self.set_flip_func = None

@@ -10,7 +10,7 @@ A dark mini-platform/RPG/adventure game written in Python and using the Pyxel en
 
 ## Dependencies
 - [Python](https://www.python.org/) 3.7 or higher.
-- [Pyxel](https://github.com/kitao/pyxel) 1.8.9 or higher.
+- [Pyxel](https://github.com/kitao/pyxel) 1.8.15 or higher.
 
 ## Controls
 - Move: Arrow keys
