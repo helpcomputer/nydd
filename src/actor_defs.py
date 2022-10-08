@@ -93,6 +93,11 @@ defs = {
                 "frames" : ((192,224),(208,224)),
                 "frame_spd" : 0.2
             },
+            "attack" : {
+                "frames" : ((192,208),(208,208)),
+                "frame_spd" : 0.25,
+                "loop" : False
+            },
         },
         "size" : (16,16),
         "hitbox" : (1,0,14,16),

@@ -111,8 +111,8 @@ class World:
         for k in list(self.actors.keys()):
             a = self.actors[k]
             if not a.is_alive:
-                if a.on_remove:
-                    on_remove_callbacks.append(a.on_remove)
+                if a.on_dead_removal_func:
+                    on_remove_callbacks.append(a.on_dead_removal_func)
                 self.remove_actor(k)
 
         for f in on_remove_callbacks:

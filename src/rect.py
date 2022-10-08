@@ -15,6 +15,9 @@ class Rect:
         self.y = y
         self.w = w
         self.h = h
+
+    def __str__(self) -> str:
+        return f"({self.x},{self.y},{self.w},{self.h})"
         
     def is_overlapping(self, x, y, w, h):
         return all((

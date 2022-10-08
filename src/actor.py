@@ -41,16 +41,18 @@ class Actor:
 
         self.got_hit = None
 
-        self.on_remove = None
+        self.on_dead_removal_func = None
+
+    def get_hitbox(self):
+        x = self.sprite.position[0] + self.hitbox.left
+        y = self.sprite.position[1] + self.hitbox.top
+        return rect.Rect(x, y, self.hitbox.w, self.hitbox.h)
 
     def check_hit(self, params):
         if self.got_hit is None:
             return
         hitbox = params["hitbox"]
-        dmg = params["damage"]
-        x = self.sprite.position[0] + self.hitbox.left
-        y = self.sprite.position[1] + self.hitbox.top
-        selfbox = rect.Rect(x, y, self.hitbox.w, self.hitbox.h)
+        selfbox = self.get_hitbox()
         if selfbox.is_overlapping_other(hitbox):
             self.got_hit(params)
 

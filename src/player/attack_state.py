@@ -33,7 +33,7 @@ class Attack(state.State):
 
         self.player.vel_x = move_x * self.player.run_speed
 
-    def get_hit_rect(self):
+    def get_attack_box(self):
         x = self.player.sprite.position[0]
         y = self.player.sprite.position[1]
         if self.player.sprite.flip_h:
@@ -54,7 +54,7 @@ class Attack(state.State):
             return
 
         if self.player.sprite.frame == 1:
-            rect = self.get_hit_rect()
+            rect = self.get_attack_box()
             attacker_cen_x = (self.player.sprite.position[0] 
                 + self.player.hitbox.mid_x)
             params = {
@@ -65,24 +65,10 @@ class Attack(state.State):
             self.world.player_attacked(params)
 
     def draw(self):
-        if self.player.sprite.frame == 1:
+        if app.g_debug:
             cam = self.world.map.cam
-            x = self.player.sprite.position[0] - cam.rect.left
-            y = (self.player.sprite.position[1] 
-                - cam.rect.top 
-                + constants.HUD_H)
-
-            if app.g_debug:
-                if self.player.sprite.flip_h:
-                    x -= 8
-                else:
-                    x += 16
-
-                pyxel.rect(
-                    x,
-                    y,
-                    8,
-                    8,
-                    8
-                )
+            ab = self.get_attack_box()
+            ab.x -= cam.rect.left
+            ab.y -= cam.rect.top - constants.HUD_H
+            ab.draw(pyxel.COLOR_WHITE)
     

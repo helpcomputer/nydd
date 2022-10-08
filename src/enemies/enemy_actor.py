@@ -42,13 +42,13 @@ class Enemy(actor.Actor):
         self._update_hp_bar(self.hp_bar)
         self.children.append(self.hp_bar)
 
-        def on_remove():
+        def on_dead_removal_func():
             self.world.add_actor(
                 "explosion16", 
                 self.sprite.position[0], 
                 self.sprite.position[1]
             )
-        self.on_remove = on_remove
+        self.on_dead_removal_func = on_dead_removal_func
 
     def _update_hp_bar(self, hp_bar):
         hp_bar.value = self.stats.get("hp_now")
@@ -60,14 +60,16 @@ class Enemy(actor.Actor):
         else:
             hp_bar.bar_col = pyxel.COLOR_GREEN
 
+    def take_damage(self, amount):
+        self.stats.set(
+            "hp_now", 
+            max(0, self.stats.get("hp_now") - amount)
+        )
+
     def on_got_hit(self, params):
         if self.state_machine.current.name != "got_hit":
-            # TODO: check for damage and death here.
-            self.stats.set(
-                "hp_now", 
-                max(0, self.stats.get("hp_now") - 20)
-            )
-
+            # TODO: check for damage amount here.
+            self.take_damage(20)
             if self.stats.get("hp_now") == 0:
                 self.is_alive = False
                 return

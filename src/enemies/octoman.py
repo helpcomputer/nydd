@@ -4,8 +4,11 @@ import pyxel
 import constants
 import state
 import enemies.enemy_actor
+import rect
+import app
 
 DEFAULT_WALK_SPEED = 0.4
+DEFAULT_ATTACK_SPEED = 2
 TURN_AROUND_FRAME_LIMIT = constants.FPS
 
 class Octoman(enemies.enemy_actor.Enemy):
@@ -14,16 +17,16 @@ class Octoman(enemies.enemy_actor.Enemy):
 
         self.state_machine.states["walk"] = \
             Walk(self, self.state_machine, world)
+        self.state_machine.states["attack"] = \
+            Attack(self, self.state_machine, world)
 
         self.state_machine.change("walk")
 
     def update(self):
         super().update()
-        self.state_machine.update()
 
     def draw(self):
         super().draw()
-        self.state_machine.draw()
 
 
 class Walk(state.State):
@@ -37,7 +40,7 @@ class Walk(state.State):
         self.last_turn_frame = 0
 
     def enter(self, enter_params=None):
-        self.enemy_self.sprite.set_state("walk")
+        self.enemy_self.sprite.set_state(self.name)
         self.enemy_self.vel_x = DEFAULT_WALK_SPEED
         if self.enemy_self.sprite.flip_h:
             self.enemy_self.vel_x *= -1
@@ -72,8 +75,91 @@ class Walk(state.State):
             self.enemy_self.set_flip()
             self.last_turn_frame = pyxel.frame_count
 
+    def check_to_attack(self):
+        player = self.world.player
+        check_area = rect.Rect(0,0,48,8)
+        check_area.x = self.enemy_self.sprite.position[0] + 16
+        check_area.y = self.enemy_self.sprite.position[1] + 4
+        if self.enemy_self.sprite.flip_h:
+            check_area.x -= 16 + check_area.w
+        player_box = rect.Rect(
+            player.sprite.position[0],
+            player.sprite.position[1],
+            16,
+            16
+        )
+        if check_area.is_overlapping_other(player_box):
+            return True
+        return False
+
     def update(self):
         self.turn_around_at_ledge()
 
+        if pyxel.frame_count % 30 == 0:
+            if self.check_to_attack():
+                self.state_machine.change("attack")
+
     def draw(self):
         pass
+
+
+class Attack(state.State):
+    def __init__(self, enemy_self, state_machine, world) -> None:
+        super().__init__()
+        self.name = "attack"
+        self.state_machine = state_machine
+        self.world = world
+        self.enemy_self = enemy_self
+
+        self.started_attack_move = False
+
+    def enter(self, enter_params=None):
+        self.enemy_self.sprite.set_state(self.name)
+        self.enemy_self.vel_x = 0
+        self.started_attack_move = False
+
+    def exit(self):
+        pass
+
+    def handle_input(self, inputs):
+        pass
+
+    def get_attack_box(self):
+        return rect.Rect(
+            (self.enemy_self.sprite.position[0] 
+                + (0 if self.enemy_self.sprite.flip_h else 8)),
+            self.enemy_self.sprite.position[1] + 4,
+            8,
+            8
+        )
+
+    def update(self):
+        if self.enemy_self.sprite.anim_finished:
+            self.state_machine.change("walk")
+            return
+
+        if self.enemy_self.sprite.frame == 1:
+            if self.started_attack_move:
+                # Better to check this before attack starts this frame so that
+                # the player can see at least one frame of attack before 
+                # they're hit.
+                params = {
+                    "actor" : self.enemy_self,
+                    "hitbox" : self.get_attack_box(),
+                    "attack" : self.enemy_self.stats.get("attack")
+                }
+                self.world.player.check_for_hit(params)
+
+            else:
+                self.started_attack_move = True
+                self.enemy_self.vel_x = DEFAULT_ATTACK_SPEED
+                if self.enemy_self.sprite.flip_h:
+                    self.enemy_self.vel_x *= -1
+
+    def draw(self):
+        if app.g_debug:
+            cam = self.world.map.cam
+            ab = self.get_attack_box()
+            ab.x -= cam.rect.left
+            ab.y -= cam.rect.top - constants.HUD_H
+            ab.draw(pyxel.COLOR_WHITE)

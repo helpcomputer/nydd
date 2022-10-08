@@ -40,6 +40,20 @@ class Player(actor.Actor):
 
         self.state_machine.change("idle")
 
+    def take_damage(self, amount):
+        self.stats.set(
+            "hp_now", 
+            max(0, self.stats.get("hp_now") - amount)
+        )
+
+    def check_for_hit(self, params):
+        attack_box = params["hitbox"]
+        selfbox = self.get_hitbox()
+        if selfbox.is_overlapping_other(attack_box):
+            attack = params["attack"]
+            # TODO: check attack against defence for damage amount.
+            self.take_damage(20)
+
     def get_touching_climbable(self):
         "Return tile location tuple."
         x = self.sprite.position[0]
