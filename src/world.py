@@ -4,6 +4,8 @@ import constants
 import map
 import actor_spawn_tiles
 
+DEFAULT_HIT_PAUSE = 0.05
+
 class World:
     def __init__(self):
         self.player = None
@@ -26,6 +28,8 @@ class World:
         self.gold = 0
         self.crystals = 0
 
+        self.hit_pause = 0
+
         self.map = map.Map({
             "world" : self,
             "tilemap" : 0,
@@ -42,6 +46,9 @@ class World:
         x = (pos[0] // cam.rect.w) * cam.rect.w
         y = (pos[1] // cam.rect.h) * cam.rect.h
         cam.set_position(x, y)
+
+    def do_hit_pause(self, secs=DEFAULT_HIT_PAUSE):
+        self.hit_pause = secs
 
     def screen_unload(self):
         for k in list(self.actors.keys()):
@@ -97,12 +104,14 @@ class World:
         return not self.player.is_dead()
 
     def attack_player(self, params):
-        self.player.check_for_hit(params)
+        if self.player.check_hit(params):
+            self.do_hit_pause()
 
     def player_attacked(self, params):
         for a in self.actors.values():
             if a.type != actor_defs.ActorType.player:
-                a.check_hit(params)
+                if a.check_hit(params):
+                    self.do_hit_pause()
 
     def update(self):
         self.map.update()

@@ -5,6 +5,12 @@ import constants
 import progress_bar
 import utils
 
+HP_BAR_MIN_WIDTH = 12
+MP_BAR_MIN_WIDTH = 12
+HP_BAR_MAX_WIDTH = 52
+MP_BAR_MAP_WIDTH = 52
+BAR_HEIGHT = 5
+
 class Hud():
     def __init__(self, theWorld):
         self.world = theWorld
@@ -12,7 +18,7 @@ class Hud():
         self.health_bar = progress_bar.ProgressBar({
             "x" : 8,
             "y" : 1,
-            "max_size" : [52,5],
+            "max_size" : [HP_BAR_MIN_WIDTH, BAR_HEIGHT],
             "value" : 0,
             "max_value" : 0,
             "bar_col" : 8,
@@ -20,7 +26,7 @@ class Hud():
         self.magic_bar = progress_bar.ProgressBar({
             "x" : 8,
             "y" : 9,
-            "max_size" : [52,5],
+            "max_size" : [MP_BAR_MIN_WIDTH, BAR_HEIGHT],
             "value" : 0,
             "max_value" : 0,
             "bar_col" : 3,

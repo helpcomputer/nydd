@@ -18,10 +18,10 @@ BASE_STATS = {
     ActorType.player : {
         "attack" : 1,
         "defence" : 1,
-        "hp_now" : 100,
-        "hp_max" : 100,
-        "mp_now" : 0,
-        "mp_max" : 100,
+        "hp_now" : 15,
+        "hp_max" : 30,
+        "mp_now" : 10,
+        "mp_max" : 30,
     },
     ActorType.enemy : {
         "attack" : 1,

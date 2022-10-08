@@ -61,7 +61,7 @@ class Player(actor.Actor):
         attack_box = params["hitbox"]
         selfbox = self.get_hitbox()
         # TODO: check attack against defence for damage amount.
-        self.take_damage(100)
+        self.take_damage(30)
         if self.stats.get("hp_now") > 0:
             self.invincibility_secs = INVINCIBILITY_SECS
             got_hit_params = {"hit_from" : "right"}
@@ -75,14 +75,16 @@ class Player(actor.Actor):
     def is_dead(self):
         return self.state_machine.current.name == "dead"
 
-    def check_for_hit(self, params):
+    def check_hit(self, params):
         if (self.invincibility_secs > 0 
             or self.is_dead()):
-            return
+            return False
         attack_box = params["hitbox"]
         selfbox = self.get_hitbox()
         if selfbox.is_overlapping_other(attack_box):
             self.take_hit(params)
+            return True
+        return False
             
     def get_touching_climbable(self):
         "Return tile location tuple."

@@ -40,6 +40,7 @@ class Actor:
         self.set_flip_func = None
 
         self.got_hit = None
+        self.can_get_hit = None
 
         self.on_dead_removal_func = None
 
@@ -49,12 +50,16 @@ class Actor:
         return rect.Rect(x, y, self.hitbox.w, self.hitbox.h)
 
     def check_hit(self, params):
-        if self.got_hit is None:
-            return
+        if (self.got_hit is None 
+            or self.can_get_hit is None
+            or self.can_get_hit() == False):
+            return False
         hitbox = params["hitbox"]
         selfbox = self.get_hitbox()
         if selfbox.is_overlapping_other(hitbox):
             self.got_hit(params)
+            return True
+        return False
 
     def get_state(self):
         return self.sprite.state

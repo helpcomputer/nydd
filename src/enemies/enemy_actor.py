@@ -27,6 +27,7 @@ class Enemy(actor.Actor):
         self.draw_func = self.default_draw
 
         self.got_hit = self.on_got_hit
+        self.can_get_hit = self.check_can_get_hit
 
         self.state_machine = state_machine.StateMachine()
         self.state_machine.states["got_hit"] = \
@@ -43,6 +44,7 @@ class Enemy(actor.Actor):
         self.children.append(self.hp_bar)
 
         def on_dead_removal_func():
+            self.world.do_hit_pause()
             self.world.add_actor(
                 "explosion16", 
                 self.sprite.position[0], 
@@ -66,26 +68,30 @@ class Enemy(actor.Actor):
             max(0, self.stats.get("hp_now") - amount)
         )
 
+    def check_can_get_hit(self):
+        if self.state_machine.current.name == "got_hit":
+            return False
+        return True
+
     def on_got_hit(self, params):
-        if self.state_machine.current.name != "got_hit":
-            # TODO: check for damage amount here.
-            self.take_damage(20)
-            if self.stats.get("hp_now") == 0:
-                self.is_alive = False
-                return
+        # TODO: check for damage amount here.
+        self.take_damage(25)
+        if self.stats.get("hp_now") == 0:
+            self.is_alive = False
+            return
 
-            self.hp_bar.visible_time = SHOW_HP_BAR_FRAMES
+        self.hp_bar.visible_time = SHOW_HP_BAR_FRAMES
 
-            got_hit_params = { 
-                "return_state" : self.state_machine.current.name
-            }
-            if (params["attacker_cen_x"] < 
-                self.sprite.position[0] + self.hitbox.mid_x):
-                got_hit_params["hit_from"] = "left"
-            else:
-                got_hit_params["hit_from"] = "right"
+        got_hit_params = { 
+            "return_state" : self.state_machine.current.name
+        }
+        if (params["attacker_cen_x"] < 
+            self.sprite.position[0] + self.hitbox.mid_x):
+            got_hit_params["hit_from"] = "left"
+        else:
+            got_hit_params["hit_from"] = "right"
 
-            self.state_machine.change("got_hit", got_hit_params)
+        self.state_machine.change("got_hit", got_hit_params)
 
     def keep_on_screen(self):
         """Keep full sprite on screen, not just checking the hitbox."""
