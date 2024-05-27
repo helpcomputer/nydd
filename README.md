@@ -3,6 +3,8 @@
 ## Introduction
 A dark mini-platform/RPG/adventure game written in Python and using the Pyxel engine.
 
+## NOTE: This project was abandoned but I'm leaving the source code up for anyone that might be interested.
+
 <p>
 <img src="images/prev01.gif" width="256">
 <img src="images/prev00.gif" width="256">
